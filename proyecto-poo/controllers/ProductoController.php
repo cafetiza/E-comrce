@@ -64,17 +64,15 @@ class productoController
 
                 /* var_dump($producto); */
 				
-				/* if(isset($_GET['id'])){
+				if(isset($_GET['id'])){
 					$id = $_GET['id'];
 					$producto->setId($id);
 					
 					$save = $producto->edit();
 				}else{
 					$save = $producto->save();
-				} */
+				} 
 
-                $save = $producto->save();
-				
 				if($save){
 					$_SESSION['producto'] = "complete";
 				}else{
@@ -88,5 +86,44 @@ class productoController
 		}
 		header('Location:'.base_url.'producto/gestion');
 	}
+
+    public function editar(){
+		Utils::isAdmin();
+		if(isset($_GET['id'])){
+			$id = $_GET['id'];
+			$edit = true;
+			
+			$producto = new Producto();
+			$producto->setId($id);
+			
+			$pro = $producto->getOne();
+			
+			require_once 'views/producto/crear.php';
+			
+		}else{
+			header('Location:'.base_url.'producto/gestion');
+		}
+	}
     
+    public function eliminar(){
+        /* var_dump($_GET); */
+        Utils::isAdmin();
+
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+            $producto = new Producto();
+            $producto -> setId($id);
+
+            $delete = $producto -> delete();
+
+            if ($delete) {
+                $_SESSION['delete'] = 'complete';
+            }else {
+                $_SESSION['delete'] = 'failed';
+            }
+        }else{
+            $_SESSION['delete'] = 'failed';
+        }
+        header("location:".base_url.'producto/gestion');
+    }
 }

@@ -5,7 +5,13 @@ class productoController
 {
     public function index()
     {
-        //renderizar vista
+		$producto = new Producto();
+		//llamamos al metodo getRandom del modelo producto
+		$productos = $producto -> getRandom(6);
+
+		/* var_dump($productos->num_rows); */
+
+		//renderizar vista
         require_once 'views/producto/destacados.php';
     }
 
@@ -34,7 +40,6 @@ class productoController
 			$precio = isset($_POST['precio']) ? $_POST['precio'] : false;
 			$stock = isset($_POST['stock']) ? $_POST['stock'] : false;
 			$categoria = isset($_POST['categoria']) ? $_POST['categoria'] : false;
-			// $imagen = isset($_POST['imagen']) ? $_POST['imagen'] : false;
 			
 			if($nombre && $descripcion && $precio && $stock && $categoria){
 				$producto = new Producto();
@@ -44,7 +49,7 @@ class productoController
 				$producto->setStock($stock);
 				$producto->setCategoria_id($categoria);
 				
-				// Guardar la imagen
+				//Guardar imagen
 				if(isset($_FILES['imagen'])){
 					$file = $_FILES['imagen'];
 					$filename = $_FILES['imagen']['name'];
@@ -62,7 +67,6 @@ class productoController
 					}
 				}
 
-                /* var_dump($producto); */
 				
 				if(isset($_GET['id'])){
 					$id = $_GET['id'];
@@ -106,7 +110,6 @@ class productoController
 	}
     
     public function eliminar(){
-        /* var_dump($_GET); */
         Utils::isAdmin();
 
         if (isset($_GET['id'])) {

@@ -15,7 +15,24 @@ class productoController
         require_once 'views/producto/destacados.php';
     }
 
-    /* cargamos la vista para gestionar */
+
+	public function ver(){
+		//cargamos un paramtro "id" por url
+		if(isset($_GET['id'])){
+			$id = $_GET['id'];
+			
+			$producto = new Producto();
+			$producto->setId($id);
+			
+			$product = $producto->getOne();
+
+		}
+
+		/* cargamos la vista para ver */
+		require_once 'views/producto/ver.php';
+	}
+
+    
     public function gestion()
     {
         Utils::isAdmin();
@@ -23,6 +40,7 @@ class productoController
         $producto = new Producto();
         $productos = $producto->getAll();
 
+		/* cargamos la vista para gestionar */
         require_once 'views/producto/gestion.php';
     }
 

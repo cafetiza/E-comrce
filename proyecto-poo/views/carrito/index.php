@@ -8,7 +8,6 @@
         <th>Eliminar</th>
         <?php foreach ($carrito as $indice => $elemento) :
             $producto = $elemento['producto'];
-            /* var_dump($producto); */
         ?>
             <tr>
                 <td><?php if ($producto->imagen != null) : ?>

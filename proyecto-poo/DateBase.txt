@@ -1,0 +1,91 @@
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET SQL_NOTES=0 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ tienda_master /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+USE tienda_master;
+
+DROP TABLE IF EXISTS categorias;
+CREATE TABLE `categorias` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS productos;
+CREATE TABLE `productos` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `categoria_id` int(255) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `descripcion` text,
+  `precio` float(100,2) NOT NULL,
+  `stock` int(255) NOT NULL,
+  `oferta` varchar(2) DEFAULT NULL,
+  `fecha` date NOT NULL,
+  `imagen` longblob,
+  PRIMARY KEY (`id`),
+  KEY `fk_producto_categoria` (`categoria_id`),
+  CONSTRAINT `fk_producto_categoria` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS usuarios;
+CREATE TABLE `usuarios` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `apellidos` varchar(255) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `rol` varchar(20) DEFAULT NULL,
+  `imagen` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS pedidos;
+CREATE TABLE `pedidos` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `usuario_id` int(255) NOT NULL,
+  `provincia` varchar(100) NOT NULL,
+  `localidad` varchar(100) NOT NULL,
+  `direccion` varchar(255) NOT NULL,
+  `coste` float(200,2) NOT NULL,
+  `estado` varchar(20) NOT NULL,
+  `fecha` date DEFAULT NULL,
+  `hora` time DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_pedido_usuario` (`usuario_id`),
+  CONSTRAINT `fk_pedido_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS lineas_pedidos;
+CREATE TABLE `lineas_pedidos` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `pedido_id` int(255) NOT NULL,
+  `producto_id` int(255) NOT NULL,
+  `unidades` int(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_linea_pedido` (`pedido_id`),
+  KEY `fk_linea_producto` (`producto_id`),
+  CONSTRAINT `fk_linea_pedido` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`),
+  CONSTRAINT `fk_linea_producto` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS carrito;
+CREATE TABLE `carrito` (
+  `id` int(255) NOT NULL AUTO_INCREMENT,
+  `usuario_id` int(255) NOT NULL,
+  `producto_id` int(255) NOT NULL,
+  `unidades` int(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_carrito_usuario` (`usuario_id`),
+  KEY `fk_carrito_producto` (`producto_id`),
+  CONSTRAINT `fk_carrito_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `fk_carrito_producto` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
+
+
+INSERT INTO categorias(id,nombre) VALUES(5,'Fundas de licuadoras'),(6,'Juegos de baÃ±o'),(7,'Cubrebocas'),(8,'Cojines'),(9,'Gelatinas'),(10,'Apagadores'),(13,'Reciclados'),(14,'Varios');
+
+
+
+INSERT INTO usuarios(id,nombre,apellidos,email,password,rol,imagen) VALUES(2,'John','Ruiz Reyes','cafetiza@gmail.com','$2y$04$egILnkljJy2IObo47PexIu3QXL4OxWM6YKnhgAPfkJ6tFUcu3O9iC','admin',NULL),(3,'Carlos','Sarabia','carlitos@gmail.com','$2y$04$obBLSA62yIXt9F1htMoULuh69.ZUcTkz4VadHI2QI/KFnqQTs1pDG','user',NULL),(4,'Bernabe','Ceron','bernabe@gmail.com','$2y$04$8CV45KhhIw/yinmNoW3yu.jKFlN1pCHaMuQDQgV53e7P7faXshqUK','user',NULL);

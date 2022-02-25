@@ -66,10 +66,12 @@ class usuarioController{
 	public function logout(){
 		if(isset($_SESSION['identity'])){
 			unset($_SESSION['identity']);
+			unset($_SESSION['carrito']);
 		}
 		
 		if(isset($_SESSION['admin'])){
 			unset($_SESSION['admin']);
+			unset($_SESSION['carrito']);
 		}
 		
 		/* redirrecion */
